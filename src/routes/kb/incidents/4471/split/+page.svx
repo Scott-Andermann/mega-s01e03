@@ -14,7 +14,8 @@ signature: Scott Andermann
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 
   const repo = 'https://github.com/Scott-Andermann/mega-s01e03/issues';
-  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` };
+  const oneDayTicket = `${repo}/3`;
+  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': oneDayTicket };
 </script>
 
 [#4471](/kb/incidents/4471) says one issue, one fix queued. Its reports say otherwise. They were
@@ -23,32 +24,45 @@ them. Read by tenant, by form and by what each body describes, they hold three p
 now has its own ticket.
 
 <Callout kind="warn">
-The queued parser fix closes only the first row. The other two need their own fixes.
+Engineering closed #4471 on 5 October: the parser is fixed and booking-v3 is retired. Neither
+touches the one-day moves. Their ticket stays open.
 </Callout>
+
+## Where each ticket stands
+
+| problem | ticket | state |
+|---|---|---|
+| `parser` | <a href={tickets.parser}>#1</a> | closed: fixed, `fix(dates): parse dd/mm for eu locales` |
+| `hint` | <a href={tickets.hint}>#2</a> | closed: won't fix, booking-v3 form retired |
+| `one-day` | <a href={oneDayTicket}>#3</a> | **open**: no fix yet |
 
 ## What #4471 holds
 
 <SplitTable ticket={4471} tickets={tickets} />
 
+Ticket #1 gives the count the desk's own table gives (at the end of this page). That table files
+every report by tenant, so its `parser` row also holds the one-day moves.
+
 ### `parser`: day-first dates read month first
 
 The shared parser reads every date month first. Every tenant in #4471 writes the day first, so
 any date with both parts at 12 or under comes back swapped: 7 April becomes 4 July. App, email
-and booking-v2 form reports. This is the bug #4471 describes, and the fix that is queued.
+and booking-v2 form reports. This is the bug #4471 describes. Fixed on 5 October.
 
 ### `hint`: booking-v3 tells people to type month first
 
 booking-v3 prints `MM/DD/YYYY` under its date field and then reads the input the tenant's way,
 day first. People do what the hint says and get a swapped date. Only form submissions on
-booking-v3 tenants. The parser fix does not touch this: the form's hint, or how it reads, has to
-change.
+booking-v3 tenants. The parser fix does not touch this. Engineering retired booking-v3 instead of
+fixing it, so no new reports should come from it.
 
 ### `one-day`: dates move by one day
 
 These are not swaps. The booking lands one day early, and the same meeting shows different days
 in different time zones ("Client in Lisbon got Tuesday. Client in Toronto got Monday."). That is
 time-zone handling, not field order. The desk noted these reports but still counted them under the
-parser.
+parser, so they look closed with #4471. They are not: the parser fix reads field order, not time
+zones. Still open.
 
 ## The table on #4471, for comparison
 
