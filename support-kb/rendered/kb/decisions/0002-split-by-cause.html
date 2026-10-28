@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link href="../../_app/immutable/entry/start.CLM90qnH.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/C-WC7A-Y.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/B3ViCJY4.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/pWKk_UeO.js" rel="modulepreload">
+		<link href="../../_app/immutable/entry/app.DNOsKNF5.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/CIhkLtJ0.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/1H54pSP-.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/Bj0n9sYw.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/CIG1j665.js" rel="modulepreload">
+		<link href="../../_app/immutable/nodes/0.O8awYiNF.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/VRRwLoRN.js" rel="modulepreload">
+		<link href="../../_app/immutable/nodes/4.BagxwHTy.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/Bgl8ZNSO.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/uICMFXTN.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/CT1C3skq.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/DY9a9hLg.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/iXLSwIXB.js" rel="modulepreload">
+		<link href="../../_app/immutable/chunks/CHPe18mu.js" rel="modulepreload">
+		<!--e2jw2j--><!----><title>0002 · Duplicates share a cause, not a subject · support kb</title>
+		<link href="../../_app/immutable/assets/runbook.BhhgOc_n.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/Callout.yLErXQDM.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/RenderStamp.BtkTE9GP.css" rel="stylesheet">
+		<link href="../../_app/immutable/assets/DedupeExplorer.C3mwiGDj.css" rel="stylesheet"></head>
+<body><div style="display: contents"><!--[--><!--[0--><!--[--><!--[--><div class="kb svelte-e2jw2j"><header><a class="crumb svelte-e2jw2j" href="/kb">support desk · kb</a> <h1 class="svelte-e2jw2j">0002 · Duplicates share a cause, not a subject</h1> <p class="meta svelte-e2jw2j"><span>owner <b>Scott-Andermann</b></span> <span class="status proposed svelte-e2jw2j">proposed</span> <span class="svelte-e2jw2j">reviewed 2026-10-28 · 0 days ago</span></p></header> <!--[-1--><!--]--> <main><p><strong>Date:</strong> 28 October 2026 · <strong>Deciders:</strong> Scott-Andermann, support desk · <strong>Replaces:</strong> <a href="/kb/decisions/0001-dedupe-by-subject">0001 · Duplicates share a subject line</a></p> <h2>Context</h2> <p>Under <a href="/kb/decisions/0001-dedupe-by-subject">0001</a> the desk merged reports on subject line alone
+and nobody read the body. Since April that put every date report into <a href="/kb/incidents/4471">#4471</a>, marked known, with one fix queued. Its reports hold three problems with
+three different fixes. Engineering’s 5 October update fixed one and retired the form behind
+another. The third is still open, and #4471 hides it.</p> <h2>Decision</h2> <p>Two reports are the same issue when they share a <strong>cause</strong>, not a subject line. To split a big
+ticket, the desk:</p> <ol><li>counts unique report ids, because the export pages overlap and repeat rows;</li> <li>places each report by its tenant: does the tenant’s locale write the day first, and which
+booking form do they run (<code>causes.ts</code>, <code>locales.ts</code>);</li> <li>reads the body, and moves a report whose body shows a different failure (the desk’s <code>desk-notes.json</code>) to that failure;</li> <li>ignores the intake tag. It is a guess from the reporter’s browser.</li></ol> <p>Applied to #4471, that gives one ticket per cause:</p> <p class="sum svelte-xskqqx"><strong>412</strong> reports in #4471 (427 export rows) · <strong>3</strong> problems</p> <table><thead><tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>intake tagged</th><th>ticket</th></tr></thead><tbody><!--[--><tr><td><code>parser</code></td><td>374</td><td>11</td><td>2026-04-01 → 2026-10-04</td><td class="tags svelte-xskqqx">parser ×351 · hint ×23</td><td><!--[0--><a href="https://github.com/Scott-Andermann/mega-s01e03/issues/1">#1</a><!--]--></td></tr><tr><td><code>hint</code></td><td>33</td><td>3</td><td>2026-04-17 → 2026-09-22</td><td class="tags svelte-xskqqx">hint ×18 · parser ×15</td><td><!--[0--><a href="https://github.com/Scott-Andermann/mega-s01e03/issues/2">#2</a><!--]--></td></tr><tr><td><code>one-day</code></td><td>5</td><td>5</td><td>2026-04-02 → 2026-10-04</td><td class="tags svelte-xskqqx">parser ×5</td><td><!--[0--><a href="https://github.com/Scott-Andermann/mega-s01e03/issues/3">#3</a><!--]--></td></tr><!--]--></tbody></table><!----> <ul><li><code>parser</code>: the shared parser reads day-first dates month first. Fixed 5 October
+(<code>fix(dates): parse dd/mm for eu locales</code>); <a href="https://github.com/Scott-Andermann/mega-s01e03/issues/1">#1</a> closed.</li> <li><code>hint</code>: booking-v3 prints <code>MM/DD/YYYY</code> but reads the tenant’s day-first order. Won’t fix,
+booking-v3 retired; <a href="https://github.com/Scott-Andermann/mega-s01e03/issues/2">#2</a> closed.</li> <li><code>one-day</code>: dates land a day early across time zones. No fix yet; <a href="https://github.com/Scott-Andermann/mega-s01e03/issues/3">#3</a> <strong>open</strong>.</li></ul> <p>#1 gives the count the desk’s own table on #4471 gives: it files every report by tenant, so its
+parser count also holds the one-day moves.</p> <h2>Consequences</h2> <aside class="warn svelte-17bri61"><!---->Merging on subject is fast, but it closed a bug that nobody fixed. A cause costs one lookup and one
+read per report. That is cheaper than a known ticket hiding an open bug.<!----></aside><!----> <ul><li>Triage reads the body before it merges into a ticket that is already big.</li> <li>The same subject can land in different tickets, and different subjects in one:</li></ul> <div class="try svelte-gq0h2h"><!--[--><fieldset class="svelte-gq0h2h"><legend>report A</legend> <select aria-label="tenant"><!--[--><option selected="">alder.physio</option><option>copper.studio</option><option>harbour.dental</option><option>kettle.books</option><option>lantern.row</option><option>long.table</option><option>morrow.tax</option><option>nine.lanterns</option><option>pale.harbour</option><option>ridge.clinic</option><option>stone.and.sons</option><!--]--></select> <select aria-label="channel"><!--[--><option>app</option><option>email</option><option selected="">form</option><!--]--></select> <input value="Booking on the wrong date" aria-label="subject"/> <code>hint</code></fieldset><fieldset class="svelte-gq0h2h"><legend>report B</legend> <select aria-label="tenant"><!--[--><option>alder.physio</option><option>copper.studio</option><option>harbour.dental</option><option selected="">kettle.books</option><option>lantern.row</option><option>long.table</option><option>morrow.tax</option><option>nine.lanterns</option><option>pale.harbour</option><option>ridge.clinic</option><option>stone.and.sons</option><!--]--></select> <select aria-label="channel"><!--[--><option>app</option><option>email</option><option selected="">form</option><!--]--></select> <input value="Booking on the wrong date" aria-label="subject"/> <code>parser</code></fieldset><!--]--> <p class="verdict svelte-gq0h2h">different causes — keep apart</p></div> <table><thead><tr><th>case</th><th>same subject</th><th>same cause</th></tr></thead><tbody><!--[--><tr><td>app vs email, same tenant</td><td>no</td><td class="svelte-gq0h2h dup">yes</td></tr><tr><td>same subject, same tenant, different channel</td><td>yes</td><td class="svelte-gq0h2h">no</td></tr><tr><td>same subject, same channel, different tenant</td><td>yes</td><td class="svelte-gq0h2h">no</td></tr><tr><td>different subject, same way in</td><td>no</td><td class="svelte-gq0h2h dup">yes</td></tr><tr><td>no tenant on file</td><td>yes</td><td class="svelte-gq0h2h">no</td></tr><!--]--></tbody></table><!----> <!--[0--><p class="stamp svelte-1280m42">desk ref <b class="svelte-1280m42">DR-S99C-8Y9N</b></p><!--]--><!----><!----></main> <footer class="svelte-e2jw2j">Pages are written by people. Tables and charts are built from data at render time.</footer></div><!--]--><!----><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_g58wxq = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../_app/immutable/entry/start.CLM90qnH.js"),
+						import("../../_app/immutable/entry/app.DNOsKNF5.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 4],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div></body></html>

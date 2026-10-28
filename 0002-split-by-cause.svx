@@ -1,0 +1,70 @@
+---
+layout: runbook
+title: '0002 · Duplicates share a cause, not a subject'
+owner: Scott-Andermann
+status: proposed
+reviewed: 2026-10-28
+signature: Scott-Andermann
+---
+
+<script>
+  import SplitTable from '#lib/kb/SplitTable.svelte';
+  import DedupeExplorer from '#lib/kb/DedupeExplorer.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/Scott-Andermann/mega-s01e03/issues';
+  const oneDayTicket = `${repo}/3`;
+  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': oneDayTicket };
+</script>
+
+**Date:** 28 October 2026 · **Deciders:** Scott-Andermann, support desk · **Replaces:**
+[0001 · Duplicates share a subject line](/kb/decisions/0001-dedupe-by-subject)
+
+## Context
+
+Under [0001](/kb/decisions/0001-dedupe-by-subject) the desk merged reports on subject line alone
+and nobody read the body. Since April that put every date report into
+[#4471](/kb/incidents/4471), marked known, with one fix queued. Its reports hold three problems with
+three different fixes. Engineering's 5 October update fixed one and retired the form behind
+another. The third is still open, and #4471 hides it.
+
+## Decision
+
+Two reports are the same issue when they share a **cause**, not a subject line. To split a big
+ticket, the desk:
+
+1. counts unique report ids, because the export pages overlap and repeat rows;
+2. places each report by its tenant: does the tenant's locale write the day first, and which
+   booking form do they run (`causes.ts`, `locales.ts`);
+3. reads the body, and moves a report whose body shows a different failure (the desk's
+   `desk-notes.json`) to that failure;
+4. ignores the intake tag. It is a guess from the reporter's browser.
+
+Applied to #4471, that gives one ticket per cause:
+
+<SplitTable ticket={4471} tickets={tickets} />
+
+- `parser`: the shared parser reads day-first dates month first. Fixed 5 October
+  (`fix(dates): parse dd/mm for eu locales`); <a href={tickets.parser}>#1</a> closed.
+- `hint`: booking-v3 prints `MM/DD/YYYY` but reads the tenant's day-first order. Won't fix,
+  booking-v3 retired; <a href={tickets.hint}>#2</a> closed.
+- `one-day`: dates land a day early across time zones. No fix yet;
+  <a href={oneDayTicket}>#3</a> <strong>open</strong>.
+
+#1 gives the count the desk's own table on #4471 gives: it files every report by tenant, so its
+parser count also holds the one-day moves.
+
+## Consequences
+
+<Callout kind="warn">
+Merging on subject is fast, but it closed a bug that nobody fixed. A cause costs one lookup and one
+read per report. That is cheaper than a known ticket hiding an open bug.
+</Callout>
+
+- Triage reads the body before it merges into a ticket that is already big.
+- The same subject can land in different tickets, and different subjects in one:
+
+<DedupeExplorer />
+
+<RenderStamp {signature} />
