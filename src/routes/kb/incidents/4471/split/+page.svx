@@ -1,0 +1,67 @@
+---
+layout: runbook
+title: '#4471, read: three problems, three tickets'
+owner: Scott Andermann
+status: open
+reviewed: 2026-10-28
+signature: Scott Andermann
+---
+
+<script>
+  import SplitTable from '#lib/kb/SplitTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/Scott-Andermann/mega-s01e03/issues';
+  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` };
+</script>
+
+[#4471](/kb/incidents/4471) says one issue, one fix queued. Its reports say otherwise. They were
+merged on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)), so nobody read
+them. Read by tenant, by form and by what each body describes, they hold three problems. Each
+now has its own ticket.
+
+<Callout kind="warn">
+The queued parser fix closes only the first row. The other two need their own fixes.
+</Callout>
+
+## What #4471 holds
+
+<SplitTable ticket={4471} tickets={tickets} />
+
+### `parser`: day-first dates read month first
+
+The shared parser reads every date month first. Every tenant in #4471 writes the day first, so
+any date with both parts at 12 or under comes back swapped: 7 April becomes 4 July. App, email
+and booking-v2 form reports. This is the bug #4471 describes, and the fix that is queued.
+
+### `hint`: booking-v3 tells people to type month first
+
+booking-v3 prints `MM/DD/YYYY` under its date field and then reads the input the tenant's way,
+day first. People do what the hint says and get a swapped date. Only form submissions on
+booking-v3 tenants. The parser fix does not touch this: the form's hint, or how it reads, has to
+change.
+
+### `one-day`: dates move by one day
+
+These are not swaps. The booking lands one day early, and the same meeting shows different days
+in different time zones ("Client in Lisbon got Tuesday. Client in Toronto got Monday."). That is
+time-zone handling, not field order. The desk noted these reports but still counted them under the
+parser.
+
+## The table on #4471, for comparison
+
+Built by `causes.ts`, which files the one-day moves under the parser by tenant and leaves `hint`
+without a ticket of its own:
+
+<CauseTable ticket={4471} />
+
+## What changes on the desk
+
+- Count unique report ids. The export pages overlap and repeat rows.
+- Place a report by its tenant and form, then by its body. Intake's tag is a guess from the browser
+  and disagrees with the tenant often.
+- A subject line says what hurt, not why. Read the body before merging into a big ticket.
+
+<RenderStamp {signature} />
