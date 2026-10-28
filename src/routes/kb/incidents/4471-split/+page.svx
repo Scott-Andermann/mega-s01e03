@@ -4,7 +4,7 @@ title: '#4471, read: three problems, three tickets'
 owner: Scott Andermann
 status: open
 reviewed: 2026-10-28
-signature: Scott Andermann
+signature: Scott-Andermann
 ---
 
 <script>
