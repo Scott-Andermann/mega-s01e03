@@ -4,7 +4,7 @@ title: '0002 · Duplicates share a cause, not a subject'
 owner: Scott-Andermann
 status: proposed
 reviewed: 2026-10-28
-signature: Scott-Andermann
+signature: c0000000-0000-4000-8000-0000005e01e3
 ---
 
 <script>
